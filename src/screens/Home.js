@@ -52,6 +52,15 @@ class HomeScreen extends Component {
     error: '',
     keyword: 'Domain',
     customUrl: '',
+    views : 0,
+    date : '',
+
+  };
+
+  handleKeyword = event => {
+    this.setState({
+      keyword: event.target.value,
+    }); // console.log(event.target.value);
   };
 
   handleChange = event => {
@@ -129,9 +138,13 @@ class HomeScreen extends Component {
           data = res.data.data;
 
           var link = '';
+          var views_count;
+          let date_created;
           for (var i = 0; i < data.length; i++) {
             if (data[i].target === this.state.longUrl) {
               link = data[i].link;
+              views_count = data[i].visit_count;
+              date_created = data[i].created_at;
               break;
             }
           }
@@ -146,12 +159,16 @@ class HomeScreen extends Component {
                 this.setState({
                   shortUrl: res.data.link,
                   submitButton: true,
+                  views : res.data.visit_count,
+                  date : res.data.created_at,
                 });
               });
           } else {
             this.setState({
               shortUrl: link,
               submitButton: true,
+              views : views_count,
+              date : date_created,
             });
           }
         });
@@ -181,6 +198,8 @@ class HomeScreen extends Component {
                 console.log(res);
                 this.setState({
                   shortUrl: res.data.link,
+                  views : res.data.visit_count,
+                  date : res.data.created_at,
                   submitButton: true,
                 });
               });
@@ -353,15 +372,34 @@ class HomeScreen extends Component {
                     inputStyle="Short url"
                     value={this.state.shortUrl}
                   />
-                  <CopyToClipboard
-                    text={this.state.shortUrl}
-                    onChange={this.handleCopy}
-                  >
-                    <Tooltip
-                      title="Copy"
-                      TransitionProps={{ timeout: 600 }}
-                      onClick={this.handleCopy}
-                    >
+                     <TextField
+                    label="Views"
+                    value={this.state.views}
+                    
+                    style={{
+                      position: 'absolute',
+                      width: '15%',
+                      
+                      background: 'rgba(230, 230, 230, 0.88)',
+                      disableUnderline: true,
+                    }}
+                    variant="filled"
+                  ></TextField>
+                     <TextField
+                    label="date created"
+                    value={this.state.date}
+                    
+                    style={{
+                      position: 'absolute',
+                      width: '15%',
+                      marginLeft: 0,
+                      background: 'rgba(230, 230, 230, 0.88)',
+                      disableUnderline: true,
+                    }}
+                    variant="filled"
+                  ></TextField>
+                  <CopyToClipboard text={this.state.shortUrl} onChange={this.handleCopy}>
+                  <Tooltip title="Copy" TransitionProps={{ timeout: 600 }} onClick = {this.handleCopy}>
                       <FileCopyOutlinedIcon
                         fontSize="medium"
                         style={{
