@@ -61,7 +61,7 @@ class HomeScreen extends Component {
   handleKeyword = event => {
     this.setState({
       keyword: event.target.value,
-    }); // console.log(event.target.value);
+    }); 
   };
 
   handleChange = event => {
@@ -74,7 +74,7 @@ class HomeScreen extends Component {
       qrButton: false,
       copied: false,
     });
-    // console.log(event.target.value);
+    
   };
 
   handleCopy = () => {
@@ -118,7 +118,7 @@ class HomeScreen extends Component {
     var data;
     var target = this.state.longUrl;
     var customurl = this.state.customUrl;
-    var id ;
+    
     if (target === '') {
       this.setState({
         error: "URL can't be empty",
@@ -148,7 +148,7 @@ class HomeScreen extends Component {
               link = data[i].link;
               views_count = data[i].visit_count;
               date_created = data[i].created_at;
-              id = data[i].id;
+              
               break;
             }
           }
@@ -166,7 +166,7 @@ class HomeScreen extends Component {
                   views : res.data.visit_count,
                   date : res.data.created_at,
                 });
-                id = res.data.id;
+               
               });
           } else {
             this.setState({
@@ -177,7 +177,7 @@ class HomeScreen extends Component {
             });
           }
         });
-        console.log(id);
+        
       } else {
         axios.get(api_fetch).then(res => {
           data = res.data.data;
@@ -201,14 +201,14 @@ class HomeScreen extends Component {
                 customurl,
               })
               .then(res => {
-                console.log(res);
+                
                 this.setState({
                   shortUrl: res.data.link,
                   views : res.data.visit_count,
                   date : res.data.created_at,
                   submitButton: true,
                 });
-                id = res.data.id;
+               
               });
           }
         });
@@ -228,11 +228,11 @@ class HomeScreen extends Component {
             break;
           }
         }
+       const ap = process.env.REACT_APP_API;
+        var api = '/api/v2/links/' + idd + ap;
        
-        var api = '/api/v2/links/' + idd + '/stats?apikey=x7eqisHA0_Fa9_xth2i4z6~BDAamG5gyeNK5pAJ1';
-        console.log(api);
         axios.get(api).then(res => {
-            console.log(res.data.allTime.views);
+            
             this.setState({
               views_arr : res.data.allTime.views,
             });
