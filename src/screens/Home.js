@@ -54,6 +54,7 @@ class HomeScreen extends Component {
     customUrl: '',
     views : 0,
     date : '',
+    views_arr : [],
 
   };
 
@@ -117,7 +118,7 @@ class HomeScreen extends Component {
     var data;
     var target = this.state.longUrl;
     var customurl = this.state.customUrl;
-
+    var id ;
     if (target === '') {
       this.setState({
         error: "URL can't be empty",
@@ -133,11 +134,13 @@ class HomeScreen extends Component {
         submitButton: false,
       });
     } else {
+      
       if (this.state.customUrl === '') {
         axios.get(api_fetch).then(res => {
           data = res.data.data;
 
           var link = '';
+         
           var views_count;
           let date_created;
           for (var i = 0; i < data.length; i++) {
@@ -145,6 +148,7 @@ class HomeScreen extends Component {
               link = data[i].link;
               views_count = data[i].visit_count;
               date_created = data[i].created_at;
+              id = data[i].id;
               break;
             }
           }
@@ -162,6 +166,7 @@ class HomeScreen extends Component {
                   views : res.data.visit_count,
                   date : res.data.created_at,
                 });
+                id = res.data.id;
               });
           } else {
             this.setState({
@@ -172,6 +177,7 @@ class HomeScreen extends Component {
             });
           }
         });
+        console.log(id);
       } else {
         axios.get(api_fetch).then(res => {
           data = res.data.data;
@@ -202,11 +208,43 @@ class HomeScreen extends Component {
                   date : res.data.created_at,
                   submitButton: true,
                 });
+                id = res.data.id;
               });
           }
         });
+        
       }
+      
+      // next api call 
+
+      axios.get(api_fetch).then(res => {
+        data = res.data.data;
+       
+       var idd;
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].target === this.state.longUrl) {
+            
+            idd = data[i].id;
+            break;
+          }
+        }
+       
+        var api = '/api/v2/links/' + idd + '/stats?apikey=x7eqisHA0_Fa9_xth2i4z6~BDAamG5gyeNK5pAJ1';
+        console.log(api);
+        axios.get(api).then(res => {
+            console.log(res.data.allTime.views);
+            this.setState({
+              views_arr : res.data.allTime.views,
+            });
+
+        });
+
+      });
+
+     
+      
     }
+
   };
 
   render() {
@@ -385,6 +423,7 @@ class HomeScreen extends Component {
                     }}
                     variant="filled"
                   ></TextField>
+               
                      <TextField
                     label="date created"
                     value={this.state.date}
@@ -393,6 +432,19 @@ class HomeScreen extends Component {
                       position: 'absolute',
                       width: '15%',
                       marginLeft: 0,
+                      background: 'rgba(230, 230, 230, 0.88)',
+                      disableUnderline: true,
+                    }}
+                    variant="filled"
+                  ></TextField>
+                       <TextField
+                    label="Views array"
+                    value={this.state.views_arr}
+                    
+                    style={{
+                      position: 'absolute',
+                      width: '15%',
+                      
                       background: 'rgba(230, 230, 230, 0.88)',
                       disableUnderline: true,
                     }}
