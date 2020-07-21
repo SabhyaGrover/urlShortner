@@ -8,8 +8,11 @@ import { Container, Select } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import MaterialUnderlineTextbox from '../components/MaterialUnderlineTextbox';
 import MaterialButtonSuccess from '../components/MaterialButtonSuccess';
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Box from '@material-ui/core/Box';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -52,10 +55,8 @@ class HomeScreen extends Component {
     error: '',
     keyword: 'Domain',
     customUrl: '',
-    views : 0,
-    date : '',
-    views_arr : [],
-
+    views: '',
+    date: '',
   };
 
   handleKeyword = event => {
@@ -72,6 +73,7 @@ class HomeScreen extends Component {
       submitButton: false,
       cusUrlCheck: false,
       qrButton: false,
+      getStats: false,
       copied: false,
     });
     
@@ -87,7 +89,11 @@ class HomeScreen extends Component {
       qrButton: true,
     });
   };
-
+  handleStats = () => {
+    this.setState({
+      getStats: true,
+    });
+  };
   handleKeyword = event => {
     this.setState({
       keyword: event.target.value,
@@ -163,8 +169,8 @@ class HomeScreen extends Component {
                 this.setState({
                   shortUrl: res.data.link,
                   submitButton: true,
-                  views : res.data.visit_count,
-                  date : res.data.created_at,
+                  views: res.data.visit_count,
+                  date: res.data.created_at,
                 });
                
               });
@@ -172,8 +178,8 @@ class HomeScreen extends Component {
             this.setState({
               shortUrl: link,
               submitButton: true,
-              views : views_count,
-              date : date_created,
+              views: views_count,
+              date: date_created,
             });
           }
         });
@@ -204,8 +210,8 @@ class HomeScreen extends Component {
                 
                 this.setState({
                   shortUrl: res.data.link,
-                  views : res.data.visit_count,
-                  date : res.data.created_at,
+                  views: res.data.visit_count,
+                  date: res.data.created_at,
                   submitButton: true,
                 });
                
@@ -249,6 +255,7 @@ class HomeScreen extends Component {
 
   render() {
     const { qrButton } = this.state;
+    const { getStats } = this.state;
     const { error } = this.state;
     const { copied } = this.state;
     const { submitButton } = this.state;
@@ -260,7 +267,7 @@ class HomeScreen extends Component {
             container
             spacing={4}
             style={{
-              marginTop: '130px',
+              marginTop: '100px',
             }}
           >
             <Grid item xs={10}>
@@ -279,95 +286,78 @@ class HomeScreen extends Component {
           </Grid>
         </Container>
         <Container fixed>
-          <Grid container spacing={4} style={{ marginTop: '200px' }}>
-            <Grid item xs />
-            <Grid item xs={5}>
-              <TextField
-                label="Enter the URL"
-                style={{
-                  height: 62,
-                  width: '34%',
-                  position: 'absolute',
-                  background: 'rgba(230, 230, 230, 0.88)',
-                }}
-                variant="filled"
-                value={this.state.longUrl}
-                onChange={this.handleChange}
-              ></TextField>
-            </Grid>
-            <Grid item xs={3}>
-              <Select
-                native
-                style={{
-                  height: 62,
-                  position: 'absolute',
-                  width: '11%',
-                  background: 'rgba(230, 230, 230, 0.88)',
-                  disableUnderline: true,
-                }}
-                required
-                value={this.state.keyword}
-                onChange={this.handleKeyword}
-                variant="filled"
-              >
-                <option disabled>Domain</option>
-                {keywords.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}{' '}
-              </Select>
-            </Grid>
-            <Grid item xs={3}>
-              <MaterialButtonSuccess
-                style={{
-                  height: 62,
-                  width: '10%',
-                  position: 'absolute',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  background: 'rgba(1, 87, 155, 100)',
-                }}
-                onClick={this.handleSubmit}
-              ></MaterialButtonSuccess>
-            </Grid>
-            <Grid item xs />
-          </Grid>
-          <Grid container spacing={3} style={{ marginTop: '60px' }}>
-            <Grid item xs />
-            <Grid item xs={7}>
-              <span style={{ fontWeight: '100' }}>
-                <Button
-                  onClick={this.handleCustomurl}
+          <Grid container spacing={1} style={{ marginTop: '100px' }}>
+            <Grid item xs={2} />
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              alignContent="flex-start"
+              flexWrap="wrap"
+            >
+              <Box flexGrow={7}>
+                <TextField
+                  label="Enter the URL"
                   style={{
-                    color: 'inherit',
+                    width: '100%',
+                    background: 'rgba(230, 230, 230, 0.88)',
                   }}
+                  required
+                  fullWidth
+                  variant="filled"
+                  value={this.state.longUrl}
+                  onChange={this.handleChange}
+                ></TextField>
+              </Box>
+              <Box m={1} flexGrow={4} css={{ maxWidth: 100 }}>
+                <TextField
+                  select
+                  label="Domain"
+                  style={{
+                    background: 'rgba(230, 230, 230, 0.88)',
+                    disableUnderline: true,
+                  }}
+                  required
+                  value={this.state.keyword}
+                  onChange={this.handleKeyword}
+                  variant="filled"
                 >
-                  Custom Url ?
-                </Button>
-              </span>
-              {cusUrlCheck && (
-                <Fade in={cusUrlCheck}>
-                  <TextField
-                    label="Custom URL"
-                    value={this.state.customUrl}
-                    onChange={this.handleCustomurl}
-                    style={{
-                      position: 'absolute',
-                      width: '15%',
-                      marginLeft: '60px',
-                      background: 'rgba(230, 230, 230, 0.88)',
-                      disableUnderline: true,
-                    }}
-                    variant="filled"
-                  ></TextField>
-                </Fade>
-              )}
-            </Grid>
-
-            <Grid item xs />
+                  {keywords.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}{' '}
+                </TextField>
+              </Box>
+              <Box
+                m={2}
+                flexGrow={2}
+                alignContent="flex-end"
+                css={{ maxWidth: 150 }}
+              >
+                <TextField
+                  label="Custom Key"
+                  value={this.state.customUrl}
+                  onChange={this.handleCustomurl}
+                  style={{
+                    background: 'rgba(230, 230, 230, 0.88)',
+                    disableUnderline: true,
+                  }}
+                  variant="filled"
+                ></TextField>
+              </Box>
+              <Box m={2} flexGrow={3}>
+                <MaterialButtonSuccess
+                  style={{
+                    height: 62,
+                    cursor: 'pointer',
+                    background: 'rgba(1, 87, 155, 100)',
+                  }}
+                  onClick={this.handleSubmit}
+                ></MaterialButtonSuccess>
+              </Box>
+            </Box>
           </Grid>
-
           {error && (
             <Snackbar
               open={error}
@@ -454,14 +444,15 @@ class HomeScreen extends Component {
                   <Tooltip title="Copy" TransitionProps={{ timeout: 600 }} onClick = {this.handleCopy}>
                       <FileCopyOutlinedIcon
                         fontSize="medium"
+                        onClick={this.handleQr}
                         style={{
                           position: 'absolute',
                           elevation: 0,
                           cursor: 'pointer',
                           marginTop: '10px',
-                          marginLeft: '320px',
+                          marginLeft: '360px',
                           color: '#263238',
-                          cursorText: 'copy',
+                          cursorText: 'QR',
                         }}
                       />
                     </Tooltip>
@@ -516,11 +507,26 @@ class HomeScreen extends Component {
                     </Zoom>
                   </Grid>
                 )}
+                {}
                 <Grid item xs />
               </Grid>
             </Fade>
           )}
-          <Grid container style={{ marginTop: '250px' }} />
+          <Grid container style={{ marginTop: '100px' }} />
+          <Grid container style={{ marginTop: '250px' }} alignItems="center">
+            <TextField
+              label="date created"
+              value={this.state.date}
+              style={{
+                position: 'absolute',
+                width: '15%',
+                marginLeft: 0,
+                background: 'rgba(230, 230, 230, 0.88)',
+                disableUnderline: true,
+              }}
+              variant="filled"
+            ></TextField>
+          </Grid>
         </Container>
       </Fragment>
     );
