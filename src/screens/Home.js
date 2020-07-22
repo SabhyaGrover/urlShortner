@@ -259,7 +259,6 @@ class HomeScreen extends Component {
     const { error } = this.state;
     const { copied } = this.state;
     const { submitButton } = this.state;
-    const { cusUrlCheck } = this.state;
     return (
       <Fragment>
         <Container fixed>
@@ -512,20 +511,35 @@ class HomeScreen extends Component {
               </Grid>
             </Fade>
           )}
-          <Grid container style={{ marginTop: '100px' }} />
+
           <Grid container style={{ marginTop: '250px' }} alignItems="center">
-            <TextField
-              label="date created"
-              value={this.state.date}
-              style={{
-                position: 'absolute',
-                width: '15%',
-                marginLeft: 0,
-                background: 'rgba(230, 230, 230, 0.88)',
-                disableUnderline: true,
-              }}
-              variant="filled"
-            ></TextField>
+            {getStats && (
+              <TextField
+                label="date created"
+                value={this.state.date}
+                style={{
+                  position: 'absolute',
+                  width: '15%',
+                  marginLeft: 0,
+                  background: 'rgba(230, 230, 230, 0.88)',
+                  disableUnderline: true,
+                }}
+                variant="filled"
+              />
+            )}
+            {getStats && (
+              <TextField
+                label="Views"
+                value={this.state.views}
+                style={{
+                  position: 'absolute',
+                  width: '15%',
+                  background: 'rgba(230, 230, 230, 0.88)',
+                  disableUnderline: true,
+                }}
+                variant="filled"
+              />
+            )}
           </Grid>
         </Container>
       </Fragment>
