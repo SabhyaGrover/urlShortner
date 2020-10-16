@@ -4,8 +4,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Hidden from '@material-ui/core/Hidden';
 import Toolbar from '@material-ui/core/Toolbar';
-import Box from '@material-ui/core/Box';
-import { Hidden } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import GitHubRibbon from 'react-github-ribbons';
 import { Switch } from '@material-ui/core';

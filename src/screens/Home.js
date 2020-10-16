@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import axios from 'axios';
-//import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +12,7 @@ import MaterialButtonSuccess from '../components/MaterialButtonSuccess';
 import MenuItem from '@material-ui/core/MenuItem';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Box from '@material-ui/core/Box';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+//import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -22,7 +22,7 @@ import Fade from '@material-ui/core/Fade';
 var QRCode = require('qrcode.react');
 var validUrl = require('valid-url');
 
-/*const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
@@ -35,11 +35,11 @@ var validUrl = require('valid-url');
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
-}));*/
+}));
 
 const keywords = [
   {
-    value: 'dsctiet.tech',
+    value: 'dsctiet.xyz',
     label: 'dsctiet',
   },
   {
@@ -62,7 +62,7 @@ class HomeScreen extends Component {
   handleKeyword = event => {
     this.setState({
       keyword: event.target.value,
-    }); 
+    });
   };
 
   handleChange = event => {
@@ -76,7 +76,6 @@ class HomeScreen extends Component {
       getStats: false,
       copied: false,
     });
-    
   };
 
   handleCopy = () => {
@@ -124,7 +123,7 @@ class HomeScreen extends Component {
     var data;
     var target = this.state.longUrl;
     var customurl = this.state.customUrl;
-    
+
     if (target === '') {
       this.setState({
         error: "URL can't be empty",
@@ -140,13 +139,12 @@ class HomeScreen extends Component {
         submitButton: false,
       });
     } else {
-      
       if (this.state.customUrl === '') {
         axios.get(api_fetch).then(res => {
           data = res.data.data;
-
+          console.log(data)
           var link = '';
-         
+
           var views_count;
           let date_created;
           for (var i = 0; i < data.length; i++) {
@@ -154,7 +152,7 @@ class HomeScreen extends Component {
               link = data[i].link;
               views_count = data[i].visit_count;
               date_created = data[i].created_at;
-              
+
               break;
             }
           }
@@ -172,7 +170,6 @@ class HomeScreen extends Component {
                   views: res.data.visit_count,
                   date: res.data.created_at,
                 });
-               
               });
           } else {
             this.setState({
@@ -183,7 +180,6 @@ class HomeScreen extends Component {
             });
           }
         });
-        
       } else {
         axios.get(api_fetch).then(res => {
           data = res.data.data;
@@ -207,50 +203,41 @@ class HomeScreen extends Component {
                 customurl,
               })
               .then(res => {
-                
                 this.setState({
                   shortUrl: res.data.link,
                   views: res.data.visit_count,
                   date: res.data.created_at,
                   submitButton: true,
                 });
-               
               });
           }
         });
-        
       }
-      
-      // next api call 
+
+      // next api call
 
       axios.get(api_fetch).then(res => {
         data = res.data.data;
-       
-       var idd;
+
+        var idd;
+        /*
         for (var i = 0; i < data.length; i++) {
           if (data[i].target === this.state.longUrl) {
-            
             idd = data[i].id;
             break;
           }
         }
-       const ap = process.env.REACT_APP_API;
+        */
+        const ap = process.env.REACT_APP_API;
         var api = '/api/v2/links/' + idd + ap;
-       
+
         axios.get(api).then(res => {
-            
-            this.setState({
-              views_arr : res.data.allTime.views,
-            });
-
+          this.setState({
+            views_arr: res.data.allTime.views,
+          });
         });
-
       });
-
-     
-      
     }
-
   };
 
   render() {
@@ -399,24 +386,22 @@ class HomeScreen extends Component {
                     inputStyle="Short url"
                     value={this.state.shortUrl}
                   />
-                     <TextField
+                  <TextField
                     label="Views"
                     value={this.state.views}
-                    
                     style={{
                       position: 'absolute',
                       width: '15%',
-                      
+
                       background: 'rgba(230, 230, 230, 0.88)',
                       disableUnderline: true,
                     }}
                     variant="filled"
                   ></TextField>
-               
-                     <TextField
+
+                  <TextField
                     label="date created"
                     value={this.state.date}
-                    
                     style={{
                       position: 'absolute',
                       width: '15%',
@@ -426,21 +411,27 @@ class HomeScreen extends Component {
                     }}
                     variant="filled"
                   ></TextField>
-                       <TextField
+                  <TextField
                     label="Views array"
                     value={this.state.views_arr}
-                    
                     style={{
                       position: 'absolute',
                       width: '15%',
-                      
+
                       background: 'rgba(230, 230, 230, 0.88)',
                       disableUnderline: true,
                     }}
                     variant="filled"
                   ></TextField>
-                  <CopyToClipboard text={this.state.shortUrl} onChange={this.handleCopy}>
-                  <Tooltip title="Copy" TransitionProps={{ timeout: 600 }} onClick = {this.handleCopy}>
+                  <CopyToClipboard
+                    text={this.state.shortUrl}
+                    onChange={this.handleCopy}
+                  >
+                    <Tooltip
+                      title="Copy"
+                      TransitionProps={{ timeout: 600 }}
+                      onClick={this.handleCopy}
+                    >
                       <FileCopyOutlinedIcon
                         fontSize="medium"
                         onClick={this.handleQr}
